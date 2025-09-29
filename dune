@@ -4,8 +4,8 @@
  (public_name mincaml)
  (foreign_stubs (language c) (names float)))
 
-(ocamllex lexer)
-(ocamlyacc parser)
+(ocamllex myLexer)
+(ocamlyacc myParser)
 
 (copy_files
  (files x86/*)
