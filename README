@@ -6,6 +6,34 @@ http://esumii.github.io/min-caml/jpaper.pdf (Japanese academic paper)
 http://esumii.github.io/min-caml/index-e.html (English Web page)
 http://esumii.github.io/min-caml/paper.pdf (English academic paper)
 
+Building with Dune
+------------------
+
+Run `dune build` to build the compiler and all three backend libraries.
+The default, dev, release, and x86 profiles select x86 code generation:
+
+    dune exec -- mincaml test/fib
+    dune exec --profile ppc -- mincaml test/fib
+    dune exec --profile sparc -- mincaml test/fib
+
+These commands produce test/fib.s for the selected architecture. Running
+the resulting assembly requires that architecture's runtime and toolchain.
+
+Testing with Dune
+-----------------
+
+Run `dune runtest` to run the same 31 programs as `make do_test`.
+The default x86 tests require a C compiler and 32-bit development libraries.
+
+Inspecting test artifacts after a failure is currently difficult: Dune normally removes the temporary sandbox containing the generated assembly,
+executables, logs, and comparison outputs.
+Unlike `make do_test`, this runner does not preserve those files in the source tree.
+Failure diagnostics and output differences are printed, but the runner stops at the first failure.
+
+
+Building with Make
+------------------
+
 1. Install OCaml (http://caml.inria.fr/) if you haven't
 
 2. Download (and expand) MinCaml, e.g.
