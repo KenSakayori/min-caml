@@ -19,3 +19,7 @@
  (description
   "An educational compiler for a minimal subset of OCaml, written in ~2000 lines of OCaml")
  (depends ocaml menhir))
+
+; To avoid module names such as Dune__exe__Type.t
+; This might lead to name collisions
+(wrapped_executables false)
