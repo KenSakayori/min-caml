@@ -1,0 +1,21 @@
+(rule
+ (alias runtest)
+ (deps
+  (sandbox always)
+  run-tests.sh
+  (glob_files *.ml)
+  (glob_files x86/*.ml)
+  (glob_files PowerPC/*.ml)
+  (glob_files SPARC/*.ml)
+  ../stub.c
+  ../x86/libmincaml.S
+  ../PowerPC/libmincaml.S
+  ../SPARC/libmincaml.S)
+ (action
+  (run bash ./run-tests.sh
+   %{exe:../main.exe}
+   %{bin:ocaml}
+   %{profile}
+   %{env:MINCAML_TEST_CC=gcc}
+   %{env:MINCAML_TEST_CFLAGS=default}
+   %{env:MINCAML_TEST_RUNNER=})))
