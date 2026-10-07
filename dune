@@ -1,21 +1,34 @@
 (executable
  (name main)
+ (modules Main)
  (package min-caml)
  (public_name mincaml)
+ (libraries mincaml_core x86 powerpc sparc)
+ (flags (:standard (:include backend-flags.sexp)))
  (foreign_stubs (language c) (names float)))
+
+(library
+ (name mincaml_core)
+ (wrapped false)
+ (modules Type Id M S Syntax Typing KNormal Alpha Beta Assoc Inline ConstFold Elim Closure MyLexer MyParser))
 
 (ocamllex myLexer)
 (ocamlyacc myParser)
 
-(copy_files
- (files x86/*)
+(rule
+ (target backend-flags.sexp)
  (enabled_if (or (= %{profile} x86) (= %{profile} dev) (= %{profile} release)))
- (alias to_x86))
+ (action (with-stdout-to %{target} (echo "(-open X86)"))))
 
-(copy_files
- (files PowerPC/*)
+(rule
+ (target backend-flags.sexp)
  (enabled_if (= %{profile} ppc))
- (alias to_ppc))
+ (action (with-stdout-to %{target} (echo "(-open Powerpc)"))))
+
+(rule
+ (target backend-flags.sexp)
+ (enabled_if (= %{profile} sparc))
+ (action (with-stdout-to %{target} (echo "(-open Sparc)"))))
 
 (env
  (dev

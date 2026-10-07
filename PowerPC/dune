@@ -1,0 +1,9 @@
+(library
+ (name powerpc)
+ (modules Asm Virtual Simm RegAlloc Emit)
+ (libraries mincaml_core))
+
+(copy_files ../virtual.mli)
+(copy_files ../simm.mli)
+(copy_files ../regAlloc.mli)
+(copy_files ../emit.mli)
