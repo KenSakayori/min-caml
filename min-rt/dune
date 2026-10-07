@@ -1,0 +1,40 @@
+; OCaml bytecode reference, using the same preprocessing as the Makefile.
+(rule
+ (target raytrace_reference.ml)
+ (deps min-rt.ml)
+ (action (copy %{deps} %{target})))
+
+(executable
+ (name raytrace_reference)
+ (modules Raytrace_reference Globals MiniMLRuntime)
+ (modes byte)
+ (preprocess
+  (per_module
+   ((action (run sh %{dep:preprocess.sh} %{input-file}))
+    Raytrace_reference Globals))))
+
+; Keep assembly and linked executable as inspectable build targets.
+(rule
+ (target min-rt.s)
+ (deps min-rt.ml)
+ (action (run %{exe:../main.exe} -inline 100 min-rt)))
+
+(rule
+ (target min-rt.min-caml)
+ (deps
+  min-rt.s ../stub.c toolchain.sh
+  x86/globals.s PowerPC/globals.s SPARC/globals.s
+  ../x86/libmincaml.S ../PowerPC/libmincaml.S ../SPARC/libmincaml.S)
+ (action
+  (run bash %{dep:toolchain.sh} link
+   %{profile}
+   %{env:MINCAML_TEST_CC=gcc}
+   %{env:MINCAML_TEST_CFLAGS=default}
+   %{target})))
+
+; Rendering is opt-in through @min-rt-test, not part of a normal build.
+(alias
+ (name default)
+ (deps raytrace_reference.bc min-rt.min-caml))
+
+(include scenes.dune.inc)

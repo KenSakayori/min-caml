@@ -31,6 +31,19 @@ Unlike `make do_test`, this runner does not preserve those files in the source t
 Failure diagnostics and output differences are printed, but the runner stops at the first failure.
 
 
+Trying the ray tracer with Dune
+------------------------------
+
+Run `dune build @min-rt-test` to render all 20 scenes from min-rt/ with
+Min-Caml and the OCaml bytecode reference and compare their PPM files exactly.
+Both images remain under _build/default/min-rt/, including when their comparison fails.
+For example:
+
+    _build/default/min-rt/ball.mincaml.ppm
+    _build/default/min-rt/ball.ocamlc.ppm
+
+The generated min-rt.s and min-rt.min-caml executable are retained there as well.
+
 Building with Make
 ------------------
 
